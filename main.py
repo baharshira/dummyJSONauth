@@ -12,7 +12,9 @@ def collect_all_evidences():
     user_details = collect_user_details_using_token(token)
     posts = collect_posts()
     posts_with_comments = collects_posts_with_comments()
-    return(user_details, posts, posts_with_comments)
+    print(user_details)
+    print(posts)
+    print(posts_with_comments)
 
 
 def login_with_valid_credentials():
