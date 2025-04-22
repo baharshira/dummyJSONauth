@@ -1,25 +1,21 @@
 import json
 
 from auth.login import login
-from evidences.authenticated_user_evidence import collect_user_details_using_token
-from evidences.collect_posts import collect_posts, collects_posts_with_comments
-
-with open("dummy_db.json") as f:
-    db = json.load(f)
-
-def collect_all_evidences():
-    token = login_with_valid_credentials()
-    user_details = collect_user_details_using_token(token)
-    posts = collect_posts()
-    posts_with_comments = collects_posts_with_comments()
-    print(user_details)
-    print(posts)
-    print(posts_with_comments)
+from plugins.evidence_runner import collect_all
 
 
-def login_with_valid_credentials():
-    valid_credentials = db["valid_credentials"][0]
-    token = login(valid_credentials)
-    return token
+def load_credentials():
+    with open("dummy_db.json") as f:
+        return json.load(f)["valid_credentials"][0]
 
-print(collect_all_evidences())
+def main():
+    creds = load_credentials()
+    token = login(creds)
+    if not token:
+        print("Authentication failed.")
+        return
+    results = collect_all(token)
+    print(json.dumps(results, indent=2, default=str))
+
+if __name__ == "__main__":
+    main()
